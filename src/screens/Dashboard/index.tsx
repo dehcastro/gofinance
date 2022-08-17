@@ -1,3 +1,4 @@
+import { HighlightCard } from "../../components/HighlightCard";
 import {
   Container,
   Header,
@@ -8,6 +9,7 @@ import {
   GreetingText,
   UserName,
   Icon,
+  HighlightCards,
 } from "./styles";
 
 export const Dashboard = () => (
@@ -31,5 +33,11 @@ export const Dashboard = () => (
         <Icon name="power" />
       </TopWrapper>
     </Header>
+
+    <HighlightCards>
+      <HighlightCard type="income" />
+      <HighlightCard type="outcome" />
+      <HighlightCard type="total" />
+    </HighlightCards>
   </Container>
 );
