@@ -12,20 +12,36 @@ import {
 
 export interface Props {
   type: "income" | "outcome" | "total";
+  title: string;
+  amount: string;
+  lastTransaction: string;
 }
 
-export const HighlightCard = ({ type }: Props) => (
+const iconNames: {
+  [key: string]: "arrow-up-circle" | "arrow-down-circle" | "dollar-sign";
+} = {
+  income: "arrow-up-circle",
+  outcome: "arrow-down-circle",
+  total: "dollar-sign",
+};
+
+export const HighlightCard = ({
+  type,
+  title,
+  amount,
+  lastTransaction,
+}: Props) => (
   <Container type={type}>
     <Header>
-      <Title>Entrada</Title>
+      <Title>{title}</Title>
 
-      <Icon name="arrow-up-circle" type={type} />
+      <Icon name={iconNames[type]} type={type} />
     </Header>
 
     <Footer>
-      <Amount>R$ 17.000,00</Amount>
+      <Amount>{amount}</Amount>
 
-      <LastTransaction>Última transação dia 09 de Julho</LastTransaction>
+      <LastTransaction>{lastTransaction}</LastTransaction>
     </Footer>
   </Container>
 );

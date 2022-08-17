@@ -4,7 +4,6 @@ import { RFValue } from "react-native-responsive-fontsize";
 
 import { Props } from "./index";
 
-// const iconTypes: { income: "success"; outcome: "attention"; total: "shape" } = {
 const iconTypes: { [key: string]: "success" | "attention" | "shape" } = {
   income: "success",
   outcome: "attention",
@@ -18,6 +17,10 @@ export const Container = styled.View<Props>`
   width: ${RFValue(300)}px;
   border-radius: 6px;
   padding: ${RFValue(20)}px ${RFValue(24)}px ${RFValue(42)}px;
+
+  & + & {
+    margin-left: ${RFValue(20)}px;
+  }
 `;
 
 export const Header = styled.View`
