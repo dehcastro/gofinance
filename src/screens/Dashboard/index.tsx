@@ -7,7 +7,7 @@ import {
   User,
   GreetingText,
   UserName,
-  PowerOffIcon,
+  Icon,
 } from "./styles";
 
 export const Dashboard = () => (
@@ -28,7 +28,7 @@ export const Dashboard = () => (
           </User>
         </UserInfo>
 
-        <PowerOffIcon name="power" />
+        <Icon name="power" />
       </TopWrapper>
     </Header>
   </Container>
