@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { StatusBar } from "expo-status-bar";
 import { ThemeProvider } from "styled-components";
 import * as SplashScreen from "expo-splash-screen";
 import {
@@ -38,6 +39,7 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <Dashboard />
+      <StatusBar style="light" />
     </ThemeProvider>
   );
 }
