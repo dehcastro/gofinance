@@ -51,7 +51,7 @@ export const Dashboard = () => (
         type="total"
         title="Total"
         amount="R$ 17.000,00"
-        lastTransaction="Última transação no dia 12 de Agosto"
+        lastTransaction="Em 17/08/2022"
       />
     </HighlightCards>
   </Container>

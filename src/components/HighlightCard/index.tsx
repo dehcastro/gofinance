@@ -1,5 +1,3 @@
-import { Text } from "react-native";
-
 import {
   Container,
   Header,
@@ -33,15 +31,15 @@ export const HighlightCard = ({
 }: Props) => (
   <Container type={type}>
     <Header>
-      <Title>{title}</Title>
+      <Title type={type}>{title}</Title>
 
-      <Icon name={iconNames[type]} type={type} />
+      <Icon name={iconNames[type]} type={type} size={50} />
     </Header>
 
     <Footer>
-      <Amount>{amount}</Amount>
+      <Amount type={type}>{amount}</Amount>
 
-      <LastTransaction>{lastTransaction}</LastTransaction>
+      <LastTransaction type={type}>{lastTransaction}</LastTransaction>
     </Footer>
   </Container>
 );
