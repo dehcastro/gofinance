@@ -1,3 +1,5 @@
+import { StyleProp, ViewStyle } from "react-native";
+
 import {
   Container,
   Header,
@@ -13,6 +15,7 @@ export interface Props {
   title: string;
   amount: string;
   lastTransaction: string;
+  style: StyleProp<ViewStyle>;
 }
 
 const iconNames: {
@@ -28,8 +31,9 @@ export const HighlightCard = ({
   title,
   amount,
   lastTransaction,
+  style,
 }: Props) => (
-  <Container type={type}>
+  <Container type={type} style={style}>
     <Header>
       <Title type={type}>{title}</Title>
 

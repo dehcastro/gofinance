@@ -15,8 +15,6 @@ import { Dashboard } from "./src/screens/Dashboard";
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  const [appIsReady, setAppIsReady] = useState(false);
-
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_500Medium,
@@ -24,17 +22,22 @@ export default function App() {
   });
 
   useEffect(() => {
-    const prepareApp = async () => {
-      if (fontsLoaded) {
-        await SplashScreen.hideAsync();
-        setAppIsReady(true);
-      }
+    const showSplashScreen = async () => {
+      await SplashScreen.preventAutoHideAsync();
     };
 
-    prepareApp();
+    showSplashScreen();
+  }, []);
+
+  useEffect(() => {
+    const hideSplashScreen = async () => {
+      await SplashScreen.hideAsync();
+    };
+
+    if (fontsLoaded) hideSplashScreen();
   }, [fontsLoaded]);
 
-  if (!appIsReady) return null;
+  if (!fontsLoaded) return null;
 
   return (
     <ThemeProvider theme={theme}>
