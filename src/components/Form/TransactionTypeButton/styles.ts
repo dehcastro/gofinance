@@ -12,7 +12,9 @@ interface ContainerProps {
   type: "income" | "outcome";
 }
 
-export const Container = styled(TouchableOpacity)<ContainerProps>`
+export const Container = styled(TouchableOpacity).attrs({
+  activeOpacity: 0.7,
+})<ContainerProps>`
   box-sizing: border-box;
   width: 49%;
   border: 1.2px solid ${({ theme }) => theme.colors.stroke};

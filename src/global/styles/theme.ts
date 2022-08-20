@@ -12,6 +12,7 @@ export default {
     title: "#363f5f",
     text: "#969cb2",
     text_secondary: "#fff",
+    text_tertiary: "#333",
     background: "#f0f2f5",
   },
   fonts: {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { ThemeProvider } from "styled-components";
 import * as SplashScreen from "expo-splash-screen";
@@ -10,7 +10,6 @@ import {
 } from "@expo-google-fonts/poppins";
 
 import theme from "./src/global/styles/theme";
-import { Dashboard } from "./src/screens/Dashboard";
 import { Register } from "./src/screens/Register";
 
 SplashScreen.preventAutoHideAsync();
