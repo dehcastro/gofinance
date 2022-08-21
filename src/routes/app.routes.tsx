@@ -1,4 +1,5 @@
 import { Platform } from "react-native";
+import { RFValue } from "react-native-responsive-fontsize";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useTheme } from "styled-components";
@@ -19,8 +20,10 @@ export const AppRoutes = () => {
         tabBarLabelPosition: "beside-icon",
         tabBarStyle: {
           height: 88,
+          paddingHorizontal: 20,
           paddingVertical: Platform.OS === "ios" ? 20 : 0,
         },
+        tabBarAllowFontScaling: true,
       }}
     >
       <Screen
@@ -32,8 +35,13 @@ export const AppRoutes = () => {
               name="format-list-bulleted"
               size={size}
               color={color}
+              style={{ marginRight: 0 }}
             />
           ),
+          tabBarLabelStyle: {
+            fontFamily: theme.fonts.regular,
+            fontSize: RFValue(12),
+          },
         }}
       />
 
@@ -44,6 +52,11 @@ export const AppRoutes = () => {
           tabBarIcon: ({ size, color }) => (
             <MaterialIcons name="attach-money" size={size} color={color} />
           ),
+          tabBarLabelStyle: {
+            fontFamily: theme.fonts.regular,
+            fontSize: RFValue(12),
+            marginLeft: RFValue(10),
+          },
         }}
       />
 
@@ -52,8 +65,17 @@ export const AppRoutes = () => {
         component={Register}
         options={{
           tabBarIcon: ({ size, color }) => (
-            <MaterialIcons name="pie-chart" size={size} color={color} />
+            <MaterialIcons
+              name="pie-chart"
+              size={size}
+              color={color}
+              style={{ marginRight: 0 }}
+            />
           ),
+          tabBarLabelStyle: {
+            fontFamily: theme.fonts.regular,
+            fontSize: RFValue(12),
+          },
         }}
       />
     </Navigator>
