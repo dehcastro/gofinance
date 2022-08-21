@@ -1,7 +1,7 @@
-import { TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import styled, { css } from "styled-components/native";
 import { RFValue } from "react-native-responsive-fontsize";
+import { TouchableOpacity } from "react-native";
 
 interface IconProps {
   type: "income" | "outcome";
@@ -12,10 +12,7 @@ interface ContainerProps {
   type: "income" | "outcome";
 }
 
-export const Container = styled(TouchableOpacity).attrs({
-  activeOpacity: 0.7,
-})<ContainerProps>`
-  box-sizing: border-box;
+export const Container = styled(TouchableOpacity)<ContainerProps>`
   width: 49%;
   border: 1.2px solid ${({ theme }) => theme.colors.stroke};
   border-radius: 8px;

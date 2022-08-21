@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
 import { StatusBar } from "expo-status-bar";
 import { ThemeProvider } from "styled-components";
 import * as SplashScreen from "expo-splash-screen";
@@ -42,11 +44,13 @@ export default function App() {
   if (!fontsLoaded) return null;
 
   return (
-    <ThemeProvider theme={theme}>
-      <NavigationContainer>
-        <AppRoutes />
-      </NavigationContainer>
-      <StatusBar style="light" />
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider theme={theme}>
+        <NavigationContainer>
+          <AppRoutes />
+        </NavigationContainer>
+        <StatusBar style="light" />
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }
