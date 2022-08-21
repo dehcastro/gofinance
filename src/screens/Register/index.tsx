@@ -1,9 +1,10 @@
 import { useCallback, useState } from "react";
 import { Modal } from "react-native";
+import { useForm } from "react-hook-form";
 
 import { Button } from "../../components/Form/Button";
 import { CategorySelectButton } from "../../components/Form/CategorySelectButton";
-import { Input } from "../../components/Form/Input";
+import { InputControlled } from "../../components/Form/InputControlled";
 import { TransactionTypeButton } from "../../components/Form/TransactionTypeButton";
 import { CategorySelect } from "../CategorySelect";
 
@@ -16,13 +17,21 @@ import {
   TransactionTypes,
 } from "./styles";
 
+interface FormData {
+  name: string;
+  amount: string;
+}
+
 export const Register = () => {
   const [transactionType, setTransactionType] = useState("");
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+
   const [category, setCategory] = useState({
     key: "category",
     name: "Categoria",
   });
+
+  const { control, handleSubmit } = useForm();
 
   const transactionTypesSelection = useCallback(
     (type: "income" | "outcome") => {
@@ -39,6 +48,16 @@ export const Register = () => {
     setIsCategoryModalOpen(true);
   }, []);
 
+  const handleRegister = useCallback(({ name, amount }: FormData) => {
+    const data = {
+      name,
+      amount,
+      transactionType,
+      category: category.key,
+    };
+    console.log(data);
+  }, []);
+
   return (
     <Container>
       <Header>
@@ -47,9 +66,13 @@ export const Register = () => {
 
       <Form>
         <Fields>
-          <Input placeholder="Nome" />
+          <InputControlled name="name" control={control} placeholder="Nome" />
 
-          <Input placeholder="Preço" />
+          <InputControlled
+            name="amount"
+            control={control}
+            placeholder="Preço"
+          />
 
           <TransactionTypes>
             <TransactionTypeButton
@@ -73,7 +96,7 @@ export const Register = () => {
           />
         </Fields>
 
-        <Button title="Enviar" />
+        <Button title="Enviar" onPress={handleSubmit(handleRegister)} />
       </Form>
 
       <Modal visible={isCategoryModalOpen} animationType="slide">
