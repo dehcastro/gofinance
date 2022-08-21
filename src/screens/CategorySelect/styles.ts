@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
 import styled from "styled-components/native";
@@ -13,7 +14,7 @@ export const Container = styled.View`
 
 export const Header = styled.View`
   width: 100%;
-  height: ${RFValue(113)}px;
+  height: ${Platform.OS === "ios" ? RFValue(114) : RFValue(80)}px;
   background-color: ${({ theme }) => theme.colors.primary};
   padding-bottom: 20px;
 
