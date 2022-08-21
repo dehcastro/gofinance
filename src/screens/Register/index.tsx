@@ -18,8 +18,7 @@ import {
 } from "./styles";
 
 interface FormData {
-  name: string;
-  amount: string;
+  [key: string]: string;
 }
 
 export const Register = () => {
