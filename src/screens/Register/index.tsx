@@ -87,13 +87,9 @@ export const Register = () => {
 
       try {
         const dataKey = "@gofinance:transaction";
-
         const storage = await AsyncStorage.getItem(dataKey);
-
         const currentStorage = storage ? JSON.parse(storage) : [];
-
         const formattedData = [...currentStorage, newTransaction];
-
         await AsyncStorage.setItem(dataKey, JSON.stringify(formattedData));
 
         setTransactionType("");
