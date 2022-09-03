@@ -20,34 +20,54 @@ import {
   Transactions,
   Title,
   TransactionsList,
+  LoadingContainer,
+  ActivityIndicator,
 } from "./styles";
 import { useFocusEffect } from "@react-navigation/native";
-
-interface highlightCardsContentType {
-  type: "income" | "outcome" | "total";
-  [key: string]: string;
-}
+import { toCurrency } from "../../utils/toCurrency";
+import { getLastTransactionDate } from "../../utils/getLastTransactionDate";
 
 export interface TransactionCardDataProps extends TransactionCardData {
   id: string;
 }
 
+interface TransactionsInfo {
+  amount: string;
+  lastTransaction: string;
+}
+
+interface HighlightCardData {
+  income: TransactionsInfo;
+  outcome: TransactionsInfo;
+  total: TransactionsInfo;
+}
+
 export const Dashboard = () => {
-  const [data, setData] = useState<TransactionCardDataProps[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [transactions, setTransactions] = useState<TransactionCardDataProps[]>(
+    []
+  );
+  const [highlightData, setHighlightData] = useState<HighlightCardData>(
+    {} as HighlightCardData
+  );
 
   const loadTransactions = useCallback(async () => {
     const dataKey = "@gofinance:transaction";
-
     const storage = await AsyncStorage.getItem(dataKey);
+    const transactionsStorage = storage ? JSON.parse(storage) : [];
 
-    const transactions = storage ? JSON.parse(storage) : [];
+    let incomeTotal = 0;
+    let outcomeTotal = 0;
 
-    const formattedTransactions: TransactionCardDataProps[] = transactions.map(
-      (item: TransactionCardDataProps) => {
-        const amount = Number(item.amount).toLocaleString("pt-BR", {
-          style: "currency",
-          currency: "BRL",
-        });
+    const formattedTransactions: TransactionCardDataProps[] =
+      transactionsStorage.map((item: TransactionCardDataProps) => {
+        if (item.type === "income") {
+          incomeTotal += Number(item.amount);
+        } else {
+          outcomeTotal += Number(item.amount);
+        }
+
+        const amount = toCurrency(Number(item.amount));
 
         const date = Intl.DateTimeFormat("pt-BR", {
           day: "2-digit",
@@ -63,19 +83,47 @@ export const Dashboard = () => {
           amount,
           date,
         };
-      }
+      });
+
+    const lastIncomeTransaction = getLastTransactionDate(
+      transactionsStorage,
+      "income"
     );
 
-    setData(formattedTransactions);
+    const lastOutcomeTransaction = getLastTransactionDate(
+      transactionsStorage,
+      "outcome"
+    );
+
+    setHighlightData({
+      income: {
+        amount: toCurrency(incomeTotal),
+        lastTransaction: `Última entrada dia ${lastIncomeTransaction}`,
+      },
+      outcome: {
+        amount: toCurrency(outcomeTotal),
+        lastTransaction: `Última saída dia ${lastOutcomeTransaction}`,
+      },
+      total: {
+        amount: toCurrency(incomeTotal - outcomeTotal),
+        lastTransaction: `${lastOutcomeTransaction} a ${lastIncomeTransaction}`,
+      },
+    });
+    setTransactions(formattedTransactions);
+    setIsLoading(false);
   }, []);
 
   useFocusEffect(
     useCallback(() => {
       loadTransactions();
-    }, [])
+    }, [loadTransactions])
   );
 
-  return (
+  return isLoading ? (
+    <LoadingContainer>
+      <ActivityIndicator />
+    </LoadingContainer>
+  ) : (
     <Container>
       <Header>
         <TopWrapper>
@@ -100,27 +148,34 @@ export const Dashboard = () => {
       </Header>
 
       <HighlightCards>
-        {data.map((component, index) => (
-          <HighlightCard
-            key={index}
-            type={component.type}
-            title={component.title}
-            amount={component.amount}
-            lastTransaction={component.lastTransaction}
-            style={
-              index === data.length - 1 && {
-                marginRight: 0,
-              }
-            }
-          />
-        ))}
+        <HighlightCard
+          type="income"
+          title="Entradas"
+          amount={highlightData.income.amount}
+          lastTransaction={highlightData.income.lastTransaction}
+        />
+
+        <HighlightCard
+          type="outcome"
+          title="Saídas"
+          amount={highlightData.outcome.amount}
+          lastTransaction={highlightData.outcome.lastTransaction}
+        />
+
+        <HighlightCard
+          type="total"
+          title="Total"
+          amount={highlightData.total.amount}
+          lastTransaction={highlightData.total.lastTransaction}
+          style={{ marginRight: 0 }}
+        />
       </HighlightCards>
 
       <Transactions>
         <Title>Listagem</Title>
 
         <TransactionsList
-          data={data}
+          data={transactions}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <TransactionCard data={item} />}
         />

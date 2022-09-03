@@ -15,7 +15,7 @@ export interface Props {
   title: string;
   amount: string;
   lastTransaction: string;
-  style: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
 }
 
 const iconNames: {
