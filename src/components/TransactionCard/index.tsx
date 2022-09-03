@@ -1,3 +1,4 @@
+import { categories } from "../../utils/categories";
 import {
   Container,
   Title,
@@ -9,16 +10,11 @@ import {
   Date,
 } from "./styles";
 
-interface Category {
-  name: string;
-  icon: string;
-}
-
 export interface TransactionCardData {
   type: "income" | "outcome";
   title: string;
   amount: string;
-  category: Category;
+  category: string;
   date: string;
 }
 
@@ -27,19 +23,22 @@ export interface TransactionCardProps {
 }
 
 export const TransactionCard = ({ data }: TransactionCardProps) => {
+  const [category] = categories.filter((item) => item.key === data.category);
+
   return (
     <Container>
       <Title>{data.title}</Title>
 
       <Amount type={data.type}>
-        {data.type === "outcome" && "-"} {data.amount}
+        {data.type === "outcome" && "- "}
+        {data.amount}
       </Amount>
 
       <Footer>
         <Category>
-          <Icon name={data.category.icon} />
+          <Icon name={category.icon} />
 
-          <CategoryName>{data.category.name}</CategoryName>
+          <CategoryName>{category.name}</CategoryName>
         </Category>
 
         <Date>{data.date}</Date>

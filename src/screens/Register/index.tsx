@@ -27,7 +27,7 @@ interface FormData {
 }
 
 const schema = Yup.object().shape({
-  name: Yup.string().required("Nome é obrigatório"),
+  title: Yup.string().required("Título é obrigatório"),
   amount: Yup.number()
     .typeError("Informe um valor numérico")
     .positive("O valor não pode ser negativo")
@@ -35,8 +35,6 @@ const schema = Yup.object().shape({
 });
 
 export const Register = () => {
-  const dataKey = "@gofinance:transaction";
-
   const [transactionType, setTransactionType] = useState("");
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
@@ -72,7 +70,7 @@ export const Register = () => {
   }, []);
 
   const handleRegister = useCallback(
-    async ({ name, amount }: FormData) => {
+    async ({ title, amount }: FormData) => {
       if (!transactionType) return Alert.alert("Selecione o tipo da transação");
 
       if (category.key === "category")
@@ -80,14 +78,16 @@ export const Register = () => {
 
       const newTransaction = {
         id: String(uuid.v4()),
-        name,
+        title,
         amount,
-        transactionType,
+        type: transactionType,
         category: category.key,
         date: new Date(),
       };
 
       try {
+        const dataKey = "@gofinance:transaction";
+
         const storage = await AsyncStorage.getItem(dataKey);
 
         const currentStorage = storage ? JSON.parse(storage) : [];
@@ -122,12 +122,12 @@ export const Register = () => {
         <Form>
           <Fields>
             <InputControlled
-              name="name"
+              name="title"
               control={control}
-              placeholder="Nome"
+              placeholder="Título"
               autoCapitalize="words"
               autoCorrect={false}
-              error={errors.name && errors.name.message}
+              error={errors.title && errors.title.message}
             />
 
             <InputControlled
