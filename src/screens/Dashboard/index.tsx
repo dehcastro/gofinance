@@ -21,7 +21,7 @@ import {
   Title,
   TransactionsList,
 } from "./styles";
-import { Platform } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 
 interface highlightCardsContentType {
   type: "income" | "outcome" | "total";
@@ -38,12 +38,9 @@ export const Dashboard = () => {
   const loadTransactions = useCallback(async () => {
     const dataKey = "@gofinance:transaction";
 
-    // await AsyncStorage.removeItem(dataKey);
-
     const storage = await AsyncStorage.getItem(dataKey);
 
     const transactions = storage ? JSON.parse(storage) : [];
-    console.log({ platform: Platform.OS, transactions });
 
     const formattedTransactions: TransactionCardDataProps[] = transactions.map(
       (item: TransactionCardDataProps) => {
@@ -72,9 +69,11 @@ export const Dashboard = () => {
     setData(formattedTransactions);
   }, []);
 
-  useEffect(() => {
-    loadTransactions();
-  }, [loadTransactions]);
+  useFocusEffect(
+    useCallback(() => {
+      loadTransactions();
+    }, [])
+  );
 
   return (
     <Container>
