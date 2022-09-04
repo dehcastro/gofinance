@@ -42,7 +42,7 @@ interface CategoryCard {
 }
 
 export const Summary = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [categoryCards, setCategoryCards] = useState<CategoryCard[]>([]);
 
@@ -50,8 +50,6 @@ export const Summary = () => {
 
   const handleDateChange = useCallback(
     (action: "next" | "previous") => {
-      setIsLoading(true);
-
       if (action === "next") {
         setSelectedDate(addMonths(selectedDate, 1));
       } else {
@@ -62,6 +60,8 @@ export const Summary = () => {
   );
 
   const loadStorage = useCallback(async () => {
+    setIsLoading(true);
+
     try {
       const dataKey = "@gofinance:transaction";
       const storage = await AsyncStorage.getItem(dataKey);
