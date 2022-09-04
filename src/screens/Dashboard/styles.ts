@@ -1,4 +1,4 @@
-import { FlatList, FlatListProps, Dimensions } from "react-native";
+import { FlatList, FlatListProps, Dimensions, Platform } from "react-native";
 import { BorderlessButton } from "react-native-gesture-handler";
 import styled from "styled-components/native";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
@@ -73,7 +73,8 @@ export const HighlightCards = styled.ScrollView.attrs({
   horizontal: true,
   showsHorizontalScrollIndicator: false,
   contentContainerStyle: { paddingHorizontal: 24 },
-  snapToInterval: Dimensions.get("window").width - 36,
+  snapToInterval:
+    Dimensions.get("window").width - (Platform.OS === "ios" ? 36 : 60),
   snapToAlignment: "start",
   decelerationRate: "fast",
 })`
