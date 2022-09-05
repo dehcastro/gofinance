@@ -17,6 +17,7 @@ import theme from "./src/global/styles/theme";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { AppRoutes } from "./src/routes/app.routes";
+import { SignIn } from "./src/screens/SignIn";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -49,7 +50,8 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider theme={theme}>
         <NavigationContainer>
-          <AppRoutes />
+          {/* <AppRoutes /> */}
+          <SignIn />
         </NavigationContainer>
         <StatusBar style="light" />
       </ThemeProvider>
