@@ -1,5 +1,7 @@
 import { useState, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { format } from "date-fns";
+import ptBR from "date-fns/locale/pt-BR";
 import { HighlightCard } from "../../components/HighlightCard";
 import {
   TransactionCard,
@@ -22,6 +24,9 @@ import {
   TransactionsList,
   LoadingContainer,
   ActivityIndicator,
+  EmptyList,
+  EmptyListIcon,
+  EmptyListText,
 } from "./styles";
 import { useFocusEffect } from "@react-navigation/native";
 import { toCurrency } from "../../utils/toCurrency";
@@ -55,16 +60,20 @@ export const Dashboard = () => {
 
   const getLastTransactionDate = useCallback(
     (collection: TransactionCardData[], type: "income" | "outcome") => {
-      if (collection.length < 1) return "";
+      if (collection.length < 1) return null;
+
+      const filteredCollection = collection.filter(
+        (transaction) => transaction.type === type
+      );
+
+      if (filteredCollection.length === 0) return null;
 
       const lastTransaction = Math.max.apply(
         Math,
-        collection
-          .filter((transaction) => transaction.type === type)
-          .map((transaction) => new Date(transaction.date).getTime())
+        filteredCollection.map((transaction) =>
+          new Date(transaction.date).getTime()
+        )
       );
-
-      if (!!lastTransaction) return "";
 
       return Intl.DateTimeFormat("pt-BR", {
         day: "2-digit",
@@ -122,18 +131,30 @@ export const Dashboard = () => {
       "outcome"
     );
 
+    const today = format(new Date(), "dd/MM/yy", { locale: ptBR });
+
+    const totalLastTransactionMessage = lastOutcomeTransaction
+      ? `${lastOutcomeTransaction} à ${today}`
+      : today;
+
     setHighlightData({
       income: {
         amount: toCurrency(incomeTotal),
-        lastTransaction: `Última entrada dia ${lastIncomeTransaction}`,
+        lastTransaction:
+          lastIncomeTransaction !== null
+            ? `Última entrada dia ${lastIncomeTransaction}`
+            : "Não há transações",
       },
       outcome: {
         amount: toCurrency(outcomeTotal),
-        lastTransaction: `Última saída dia ${lastOutcomeTransaction}`,
+        lastTransaction:
+          lastOutcomeTransaction !== null
+            ? `Última saída dia ${lastOutcomeTransaction}`
+            : "Não há transações",
       },
       total: {
         amount: toCurrency(incomeTotal - outcomeTotal),
-        lastTransaction: `${lastOutcomeTransaction} a ${lastIncomeTransaction}`,
+        lastTransaction: totalLastTransactionMessage,
       },
     });
     setIsLoading(false);
@@ -204,6 +225,15 @@ export const Dashboard = () => {
           data={transactions}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <TransactionCard data={item} />}
+          ListEmptyComponent={() => (
+            <EmptyList>
+              <EmptyListIcon name="frown" />
+              <EmptyListText>
+                Você ainda não{"\n"}
+                registrou transações!
+              </EmptyListText>
+            </EmptyList>
+          )}
         />
       </Transactions>
     </Container>

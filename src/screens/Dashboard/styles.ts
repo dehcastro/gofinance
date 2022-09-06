@@ -121,3 +121,22 @@ export const ActivityIndicator = styled.ActivityIndicator.attrs(
     size: "large",
   })
 )``;
+
+export const EmptyList = styled.View`
+  margin-top: 50px;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const EmptyListIcon = styled(Feather)`
+  font-size: ${RFValue(36)}px;
+  color: ${({ theme }) => theme.colors.primary}90;
+`;
+
+export const EmptyListText = styled.Text`
+  font-size: ${RFValue(18)}px;
+  font-family: ${({ theme }) => theme.fonts.regular};
+  color: ${({ theme }) => theme.colors.text};
+  text-align: center;
+  margin-top: 20px;
+`;
