@@ -26,6 +26,7 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import { toCurrency } from "../../utils/toCurrency";
 import { getLastTransactionDate } from "../../utils/getLastTransactionDate";
+import { useAuth } from "../../context/auth";
 
 export interface TransactionCardDataProps extends TransactionCardData {
   id: string;
@@ -50,6 +51,8 @@ export const Dashboard = () => {
   const [highlightData, setHighlightData] = useState<HighlightCardData>(
     {} as HighlightCardData
   );
+
+  const { signOut } = useAuth();
 
   const loadTransactions = useCallback(async () => {
     const dataKey = "@gofinance:transaction";
@@ -141,7 +144,7 @@ export const Dashboard = () => {
             </User>
           </UserInfo>
 
-          <LogoutButton onPress={() => {}}>
+          <LogoutButton onPress={signOut}>
             <Icon name="power" />
           </LogoutButton>
         </TopWrapper>

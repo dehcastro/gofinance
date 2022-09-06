@@ -21,6 +21,7 @@ interface AuthContextData {
   user: User;
   signInWithGoogle: () => Promise<void>;
   signInWithApple: () => Promise<void>;
+  signOut: () => Promise<void>;
 }
 
 interface AuthorizationResponse {
@@ -73,20 +74,18 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signInWithApple = useCallback(async () => {
     try {
-      const credential = await AppleAuthentication.signInAsync({
+      const credentials = await AppleAuthentication.signInAsync({
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
         ],
       });
 
-      console.log({ credential });
-
-      if (credential) {
+      if (credentials) {
         const loggedUser = {
-          id: String(credential.user),
-          email: credential.email!,
-          name: credential.fullName?.givenName!,
+          id: String(credentials.user),
+          email: credentials.email!,
+          name: credentials.fullName?.givenName!,
         };
 
         setUser(loggedUser);
@@ -97,8 +96,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
+  const signOut = useCallback(async () => {
+    await AsyncStorage.removeItem(userStorageKey);
+    setUser({} as User);
+    console.log("laksjdlksaj");
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, signInWithGoogle, signInWithApple }}>
+    <AuthContext.Provider
+      value={{ user, signInWithGoogle, signInWithApple, signOut }}
+    >
       {children}
     </AuthContext.Provider>
   );
