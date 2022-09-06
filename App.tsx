@@ -1,4 +1,3 @@
-import "react-native-gesture-handler";
 import "intl";
 import "intl/locale-data/jsonp/pt-BR";
 import { useEffect } from "react";
