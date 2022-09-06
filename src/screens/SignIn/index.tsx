@@ -5,7 +5,7 @@ import AppleSvg from "../../assets/apple.svg";
 import GoogleSvg from "../../assets/google.svg";
 import LogoSvg from "../../assets/logo.svg";
 import { SignInSocialButton } from "../../components/SignInSocialButton";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/auth";
 
 import {
   Container,
@@ -18,7 +18,7 @@ import {
 } from "./styles";
 
 export const SignIn = () => {
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, signInWithApple } = useAuth();
 
   const handleSignInWithGoogle = useCallback(async () => {
     try {
@@ -26,6 +26,15 @@ export const SignIn = () => {
     } catch (error) {
       console.log(error);
       Alert.alert("Não foi possível conectar à sua conta Google");
+    }
+  }, []);
+
+  const handleSignInWithApple = useCallback(async () => {
+    try {
+      await signInWithApple();
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Não foi possível conectar à sua conta Apple");
     }
   }, []);
 
@@ -56,7 +65,11 @@ export const SignIn = () => {
             onPress={handleSignInWithGoogle}
           />
 
-          <SignInSocialButton title="Entrar com Apple" svg={AppleSvg} />
+          <SignInSocialButton
+            title="Entrar com Apple"
+            svg={AppleSvg}
+            onPress={handleSignInWithApple}
+          />
         </SignInButtons>
       </Footer>
     </Container>
