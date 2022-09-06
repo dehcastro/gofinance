@@ -1,4 +1,10 @@
-import { createContext, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import * as AuthSession from "expo-auth-session";
 import * as AppleAuthentication from "expo-apple-authentication";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -22,6 +28,7 @@ interface AuthContextData {
   signInWithGoogle: () => Promise<void>;
   signInWithApple: () => Promise<void>;
   signOut: () => Promise<void>;
+  loading: boolean;
 }
 
 interface AuthorizationResponse {
@@ -35,8 +42,23 @@ const AuthContext = createContext({} as AuthContextData);
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User>({} as User);
+  const [loading, setLoading] = useState(true);
 
   const userStorageKey = "@gofinance:user";
+
+  useEffect(() => {
+    (async () => {
+      const userStorage = await AsyncStorage.getItem(userStorageKey);
+
+      if (userStorage) {
+        const loggedUser = JSON.parse(userStorage) as User;
+
+        setUser(loggedUser);
+      }
+
+      setLoading(false);
+    })();
+  }, []);
 
   const signInWithGoogle = useCallback(async () => {
     try {
@@ -103,7 +125,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, signInWithGoogle, signInWithApple, signOut }}
+      value={{ user, signInWithGoogle, signInWithApple, signOut, loading }}
     >
       {children}
     </AuthContext.Provider>
