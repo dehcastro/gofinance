@@ -52,7 +52,7 @@ export const Dashboard = () => {
     {} as HighlightCardData
   );
 
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
 
   const loadTransactions = useCallback(async () => {
     const dataKey = "@gofinance:transaction";
@@ -133,14 +133,14 @@ export const Dashboard = () => {
           <UserInfo>
             <UserAvatar
               source={{
-                uri: "https://avatars.githubusercontent.com/u/6754099?v=4",
+                uri: user.picture,
               }}
             />
 
             <User>
               <GreetingText>Olá,</GreetingText>
 
-              <UserName>André!</UserName>
+              <UserName>{user.name}!</UserName>
             </User>
           </UserInfo>
 
