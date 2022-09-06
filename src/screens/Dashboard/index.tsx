@@ -25,7 +25,6 @@ import {
 } from "./styles";
 import { useFocusEffect } from "@react-navigation/native";
 import { toCurrency } from "../../utils/toCurrency";
-import { getLastTransactionDate } from "../../utils/getLastTransactionDate";
 import { useAuth } from "../../context/auth";
 
 export interface TransactionCardDataProps extends TransactionCardData {
@@ -54,16 +53,38 @@ export const Dashboard = () => {
 
   const { signOut, user } = useAuth();
 
+  const getLastTransactionDate = useCallback(
+    (collection: TransactionCardData[], type: "income" | "outcome") => {
+      if (collection.length < 1) return "";
+
+      const lastTransaction = Math.max.apply(
+        Math,
+        collection
+          .filter((transaction) => transaction.type === type)
+          .map((transaction) => new Date(transaction.date).getTime())
+      );
+
+      if (!!lastTransaction) return "";
+
+      return Intl.DateTimeFormat("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+      }).format(new Date(lastTransaction));
+    },
+    []
+  );
+
   const loadTransactions = useCallback(async () => {
-    const dataKey = "@gofinance:transaction";
+    const dataKey = `@gofinance:transaction_user:${user.id}`;
     const storage = await AsyncStorage.getItem(dataKey);
-    const transactionsStorage = storage ? JSON.parse(storage) : [];
+    const transactions = storage ? JSON.parse(storage) : [];
 
     let incomeTotal = 0;
     let outcomeTotal = 0;
 
-    const formattedTransactions: TransactionCardDataProps[] =
-      transactionsStorage.map((item: TransactionCardDataProps) => {
+    const formattedTransactions: TransactionCardDataProps[] = transactions.map(
+      (item: TransactionCardDataProps) => {
         if (item.type === "income") {
           incomeTotal += Number(item.amount);
         } else {
@@ -86,15 +107,18 @@ export const Dashboard = () => {
           amount,
           date,
         };
-      });
+      }
+    );
+
+    setTransactions(formattedTransactions);
 
     const lastIncomeTransaction = getLastTransactionDate(
-      transactionsStorage,
+      transactions,
       "income"
     );
 
     const lastOutcomeTransaction = getLastTransactionDate(
-      transactionsStorage,
+      transactions,
       "outcome"
     );
 
@@ -112,7 +136,6 @@ export const Dashboard = () => {
         lastTransaction: `${lastOutcomeTransaction} a ${lastIncomeTransaction}`,
       },
     });
-    setTransactions(formattedTransactions);
     setIsLoading(false);
   }, []);
 

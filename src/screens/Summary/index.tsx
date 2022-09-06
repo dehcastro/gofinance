@@ -10,6 +10,7 @@ import { ptBR } from "date-fns/locale";
 import { HistoryCard } from "../../components/HistoryCard";
 import { categories } from "../../utils/categories";
 import { toCurrency } from "../../utils/toCurrency";
+import { useAuth } from "../../context/auth";
 import {
   Container,
   Header,
@@ -47,6 +48,7 @@ export const Summary = () => {
   const [categoryCards, setCategoryCards] = useState<CategoryCard[]>([]);
 
   const theme = useTheme();
+  const { user } = useAuth();
 
   const handleDateChange = useCallback(
     (action: "next" | "previous") => {
@@ -63,7 +65,7 @@ export const Summary = () => {
     setIsLoading(true);
 
     try {
-      const dataKey = "@gofinance:transaction";
+      const dataKey = `@gofinance:transaction_user:${user.id}`;
       const storage = await AsyncStorage.getItem(dataKey);
       const currentStorage = storage ? JSON.parse(storage) : [];
 
