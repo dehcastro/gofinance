@@ -99,7 +99,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const signOut = useCallback(async () => {
     await AsyncStorage.removeItem(userStorageKey);
     setUser({} as User);
-    console.log("laksjdlksaj");
   }, []);
 
   return (
